@@ -1,39 +1,146 @@
-# Projet Netflix Content Insights
 
-## 🚀 Objectif  
-Analyser l’évolution du catalogue Netflix (films vs séries, pays, genres, durées) et fournir un **dashboard Streamlit** interactif pour suivre les KPIs clés :
-1. Nombre de titres ajoutés par année  
-2. Ratio Films / TV Shows par année  
-3. Top 5 pays producteurs  
-4. Top 10 genres  
-5. Durée moyenne des films et nombre moyen de saisons pour les séries  
+# 🎬 Projet Netflix Content Insights
 
-## 📂 Structure du projet 
+> Un pipeline **ETL complet** et un **dashboard interactif** pour explorer le catalogue Netflix.
 
+---
+
+## 📁 Structure du projet
+
+```
 PROJET_NETFLIX/
 │
 ├─ data/
-│ ├─ raw/ # CSV originaux
-│ ├─ silver/ # Parquet nettoyé
-│ └─ gold/ # CSV KPI
+│   ├─ raw/        → Données brutes (CSV)
+│   ├─ silver/     → Données nettoyées (Parquet)
+│   └─ gold/       → Données agrégées KPI (CSV)
 │
-├─ src/ # Scripts de pipeline
-│ ├─ ingestion.py # Copie netflix_titles.csv → data/raw
-│ ├─ cleaning.py # Nettoyage → data/silver/.parquet
-│ ├─ enrichment.py # Agrégations KPI → data/gold/.csv
-│ └─ dashboard_app.py# Dashboard Streamlit
+├─ src/            → Scripts du pipeline
+│   ├─ ingestion.py       → Copie netflix_titles.csv → raw/
+│   ├─ cleaning.py        → Nettoyage → silver/.parquet
+│   ├─ enrichment.py      → Génère les KPI → gold/.csv
+│   └─ dashboard_app.py   → Application Streamlit
 │
-├─ tests/ # Tests unitaires (pytest)
-│ └─ test_pipeline.py
+├─ tests/
+│   └─ test_pipeline.py   → Tests unitaires (pytest)
 │
-├─ requirements.txt # Dépendances Python
-├─ README.md # Ce fichier
-└─ .streamlit/ # (optionnel) config Streamlit
-└─ config.toml
+├─ requirements.txt       → Dépendances Python
+├─ .streamlit/config.toml → Config optionnelle Streamlit
+└─ README.md              → Ce fichier
+```
 
-## ⚙️ Installation & Setup  
+---
 
-1. **Cloner** le repo et se placer dans le dossier :  
-   ```bash
-   git clone <url_repo>
-   cd PROJET_NETFLIX
+## ⚙️ Prérequis
+
+- Python 3.11+
+- `pip` et `venv` (ou `virtualenv`)
+- Git
+
+---
+
+## 🚧 Installation
+
+```bash
+git clone https://github.com/Mohamed-Daoudi-Data/Projet_netflix_Finale.git
+cd Projet_netflix_Finale
+
+# Créer et activer l’environnement virtuel
+python3 -m venv venv
+source venv/bin/activate         # Linux/macOS
+# .\venv\Scripts\Activate.ps1    # Windows PowerShell
+
+# Installer les dépendances
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+---
+
+## 🔄 Exécution du pipeline
+
+### ▶️ Mode script simple
+
+```bash
+python run_pipeline.py
+```
+
+### 🪂 Mode Airflow
+
+```bash
+# Initialisation
+export AIRFLOW_HOME="$PWD/airflow"
+export AIRFLOW__WEBSERVER__AUTHENTICATE=False
+export AIRFLOW__WEBSERVER__RBAC=False
+
+airflow db reset --yes
+airflow connections create-default-connections
+```
+
+```bash
+# Terminal 1
+airflow scheduler
+```
+
+```bash
+# Terminal 2
+airflow standalone
+```
+
+- Ouvre l’UI : http://localhost:8080  
+- Déclenche le DAG : `netflix_pipeline`  
+- Suis l’exécution en direct
+
+---
+
+## 📊 Dashboard interactif
+
+```bash
+streamlit run src/dashboard_app.py
+```
+
+Fonctionnalités :
+- Filtres : année, pays, genre
+- Carte du monde interactive 🌍
+- Vue des données agrégées (KPI)
+
+---
+
+## ✅ Tests unitaires
+
+```bash
+pytest -q
+```
+
+Couvre :
+- L’ingestion
+- Le nettoyage
+- L’enrichissement KPI
+
+---
+
+## 🔧 Extensions possibles
+
+- 🔁 Passage en production : PostgreSQL + CeleryExecutor  
+- 🔐 Sécurisation (RBAC, gestion utilisateurs)  
+- 🐳 Déploiement Docker Compose ou cloud (Azure, GCP)  
+- 🎯 Module de recommandation (similarité de genres)
+
+---
+
+## 🧾 Glossaire technique
+
+| 🛠️ Technologie | Description / Pourquoi ? |
+|----------------|--------------------------|
+| **Pandas** | Manipulation rapide des données |
+| **Parquet** | Format colonne performant pour traitement et stockage |
+| **Streamlit** | Création simple de dashboards interactifs |
+| **Airflow** | Orchestration et planification de pipeline ETL |
+| **pytest** | Test unitaire des fonctions critiques |
+
+---
+
+## 👨‍💻 Auteur
+
+Mohamed Daoudi — Licence Informatique  
+Université XYZ — © 2025
