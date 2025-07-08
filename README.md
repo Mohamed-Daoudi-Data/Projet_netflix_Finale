@@ -142,5 +142,5 @@ Couvre :
 
 ## 👨‍💻 Auteur
 
-Mohamed Daoudi — Licence Informatique  
-Université XYZ — © 2025
+Mohamed Daoudi — Master Data Enginner  
+© 2025
